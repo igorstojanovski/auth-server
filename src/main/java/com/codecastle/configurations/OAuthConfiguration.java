@@ -1,5 +1,6 @@
 package com.codecastle.configurations;
 
+import com.codecastle.services.JpaClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +16,9 @@ public class OAuthConfiguration  extends AuthorizationServerConfigurerAdapter {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private JpaClientDetailsService clientDetailsService;
+
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints)
             throws Exception {
@@ -23,12 +27,6 @@ public class OAuthConfiguration  extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        // @formatter:off
-        clients.inMemory()
-                .withClient("acme")
-                .secret("acmesecret")
-                .authorizedGrantTypes("authorization_code", "refresh_token", "password")
-                .scopes("openid");
-        // @formatter:on
+        clients.withClientDetails(clientDetailsService);
     }
 }
